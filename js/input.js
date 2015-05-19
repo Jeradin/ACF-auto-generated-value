@@ -1,34 +1,27 @@
 (function($){
+	function make_random_key()
+	{
+		    var text = "";
+		    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+		    for( var i=0; i < 8; i++ )
+		        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+		    return text;
+	}
 
 	function initialize_field( $el ) {
+
 		var $input = $el.find('.auto-generated-value-input');
 
-		if($input.data('hide') === 'yes' && $el.is('tr')){
+		if($input.data('hide') === 'yes'){
 			$el.hide();
 		}
-
 
 		// Check if value is set
 		if( ! $input.val() ){
 			// If not, get all existing values to make sure the new one is unique
-			var $repeater = $el.parents('[data-type=repeater]');
-
-			var values = [];
-			$repeater.find('.auto-generated-value-input').each(function(){
-				if($(this).val()){
-					values.push($(this).val());
-				}
-			});
-			// Start from zero
-			var count = 0;
-			var value = $input.data('prefix') + count;
-			// Generate new values until we get one that doesn't exist
-			console.log(values);
-			while(values.indexOf(value) > -1){
-				count++;
-				value = $input.data('prefix') + count;
-			}
+			var value = $input.data('prefix') + make_random_key();
 			$input.val(value);
 		}
 
@@ -64,7 +57,6 @@
 
 			// search $el for fields of type 'auto_generated_value'
 			acf.get_fields({ type : 'auto_generated_value'}, $el).each(function(){
-
 				initialize_field( $(this) );
 
 			});
